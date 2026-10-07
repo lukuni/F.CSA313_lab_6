@@ -1,0 +1,18 @@
+FromAccount: Active, ~Missing, ~Frozen
+ToAccount:   Other, ~Missing, ~SameAsFrom
+Amount:      Typical, Minimal, ~Zero, ~Negative
+Currency:    SameAsAccount, ForeignStronger, ForeignWeaker
+SpentToday:  None, Some
+Balance:     Below, Equal, ~Exceeds
+DailyLimit:  Below, Equal, ~Exceeds
+
+IF [FromAccount] = "Missing"
+THEN [SpentToday] = "None" AND [Balance] = "Below" AND [DailyLimit] = "Below";
+
+IF [Amount] IN {"Zero", "Negative"}
+THEN [Balance] = "Below" AND [DailyLimit] = "Below";
+
+IF [Amount] = "Minimal"
+THEN [FromAccount] = "Active" AND [ToAccount] = "Other"
+ AND [Currency] = "SameAsAccount" AND [SpentToday] = "None"
+ AND [Balance] = "Below" AND [DailyLimit] = "Below";
